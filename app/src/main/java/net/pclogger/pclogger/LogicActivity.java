@@ -1,5 +1,6 @@
 package net.pclogger.pclogger;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,23 +9,33 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 
+
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static android.support.v7.appcompat.R.styleable.View;
 
 public class LogicActivity extends AppCompatActivity {
 
-    @InjectView(R.id.editTextLogin) EditText _editTextLogin;
-    @InjectView(R.id.editTextPassword) EditText _editTextPassword;
-    @InjectView(R.id.buttonLogin) Button _buttonLogin;
+    @BindView(R.id.editTextLogin) EditText _editTextLogin;
+    @BindView(R.id.editTextPassword) EditText _editTextPassword;
+    @BindView(R.id.buttonLogin) Button _buttonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logic);
-
+        ButterKnife.bind(this);
         setControls();
     }
 
@@ -45,10 +56,52 @@ public class LogicActivity extends AppCompatActivity {
         }
     }
 
+    private void WSDL(){
+        String NAMESPACE = "http://eleet.eu/services/";
+        String SOAP_ACTION = "http://eleet.eu/services/Find";
+        String METHOD_NAME = "Find";
+        String URL = "http://prod-license-service.cloudapp.net/pclLicense.svc";
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty("email", "reiter@pclogger.net");
+        request.addProperty("password", "Marzenka123");
+        request.addProperty("ip", "192.168.0.1");
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(request);
+
+        try{
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call(SOAP_ACTION, envelope);
+
+            SoapPrimitive result = (SoapPrimitive)envelope.getResponse();
+            Object obj = result;
+        } catch (SoapFault soapFault) {
+            soapFault.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @OnClick(R.id.buttonLogin)
     public void submit(Button button){
-        if(validateEmail()){
-            //TODO ODPYTAJ API
+        service asd = new service();
+        asd.execute();
     }
+
+    public class service extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... args0){
+            try{
+                WSDL();
+            }catch(Exception ex){
+                String asd = ex.getMessage();
+            }
+            return null;
+        }
     }
+
 }
