@@ -56,15 +56,33 @@ public class LogicActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.buttonLogin)
+    public void submit(Button button){
+        service asd = new service();
+        asd.execute();
+    }
+
+    public class service extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... args0){
+            try{
+                WSDL();
+            }catch(Exception ex){
+                String asd = ex.getMessage();
+            }
+            return null;
+        }
+    }
+
     private void WSDL(){
         String NAMESPACE = "http://eleet.eu/services/";
         String SOAP_ACTION = "http://eleet.eu/services/Find";
         String METHOD_NAME = "Find";
-        String URL = "http://prod-license-service.cloudapp.net/pclLicense.svc";
+        String URL = "http://prod-license-service.cloudapp.net/pclLicense.svc?wsdl";
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-        request.addProperty("email", "reiter@pclogger.net");
-        request.addProperty("password", "Marzenka123");
+        request.addProperty("email", "admin@pclogger.net");
+        request.addProperty("password", "haslo");
         request.addProperty("ip", "192.168.0.1");
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
@@ -83,24 +101,6 @@ public class LogicActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    @OnClick(R.id.buttonLogin)
-    public void submit(Button button){
-        service asd = new service();
-        asd.execute();
-    }
-
-    public class service extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... args0){
-            try{
-                WSDL();
-            }catch(Exception ex){
-                String asd = ex.getMessage();
-            }
-            return null;
         }
     }
 
