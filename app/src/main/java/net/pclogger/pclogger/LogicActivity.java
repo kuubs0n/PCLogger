@@ -20,6 +20,8 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import IPclLicenseServiceContract.PclLicenseServiceContractClient;
+import IPclLicenseServiceContract.UserAccountModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -75,33 +77,8 @@ public class LogicActivity extends AppCompatActivity {
     }
 
     private void WSDL(){
-        String NAMESPACE = "http://eleet.eu/services/";
-        String SOAP_ACTION = "http://eleet.eu/services/Find";
-        String METHOD_NAME = "Find";
-        String URL = "http://prod-license-service.cloudapp.net/pclLicense.svc?wsdl";
-
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-        request.addProperty("email", "admin@pclogger.net");
-        request.addProperty("password", "haslo");
-        request.addProperty("ip", "192.168.0.1");
-
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-
-        try{
-            HttpTransportSE transport = new HttpTransportSE(URL);
-            transport.call(SOAP_ACTION, envelope);
-
-            SoapPrimitive result = (SoapPrimitive)envelope.getResponse();
-            Object obj = result;
-        } catch (SoapFault soapFault) {
-            soapFault.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PclLicenseServiceContractClient client = new PclLicenseServiceContractClient();
+        UserAccountModel user =  client.Find("adhdteam420@yopmail.com", "qwerty.123", "192.168.0.10");
     }
 
 }
