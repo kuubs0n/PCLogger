@@ -30,11 +30,11 @@ import IPclLicenseServiceContract.IWsdl2CodeEvents;
 
 public class PclLicenseServiceContractClient {
     
-    public String NAMESPACE ="";
-    public String url="";
-    public int timeOut = 180;
+    public static String NAMESPACE ="http://eleet.eu/services/";
+    public static String url="http://prod-license-service.cloudapp.net/pclLicense.svc";
+    public int timeOut = 360;
     public IPclLicenseServiceContract.IWsdl2CodeEvents eventHandler;
-    public CommunicationState state;
+    public static final String SOAP_ACTION_PREFIX = "/";
 
     public PclLicenseServiceContractClient(){}
     
@@ -1159,20 +1159,26 @@ public class PclLicenseServiceContractClient {
     }
     
     public UserAccountModel Find(String email,String password,String ip,List<HeaderProperty> headers){
-        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
-        SoapObject soapReq = new SoapObject("","Find");
+
+        SoapObject soapReq = new SoapObject(NAMESPACE,"Find");
         soapReq.addProperty("email",email);
         soapReq.addProperty("password",password);
         soapReq.addProperty("ip",ip);
+
         soapEnvelope.setOutputSoapObject(soapReq);
-        HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+        soapEnvelope.bodyOut = soapReq;
+
+        HttpTransportSE httpTransport = new HttpTransportSE(url);
+        httpTransport.debug = true;
         try{
             if (headers!=null){
                 httpTransport.call("http://eleet.eu/services/IPclLicenseServiceContract/Find", soapEnvelope,headers);
             }else{
                 httpTransport.call("http://eleet.eu/services/IPclLicenseServiceContract/Find", soapEnvelope);
+                String a = httpTransport.requestDump;
             }
             Object retObj = soapEnvelope.bodyIn;
             if (retObj instanceof SoapFault){
