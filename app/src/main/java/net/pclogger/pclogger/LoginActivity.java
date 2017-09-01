@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,10 +74,10 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonLogin)
     public void submitButtonLogin(){
-        if(validateCredentials()){
+        //if(validateCredentials()){
             loginAsync loginAction = new loginAsync();
             loginAction.execute();
-        }
+        //}
     }
 
     @OnClick(R.id.textViewLinkToTerm)
@@ -100,9 +101,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... args0){
             try{
-                login();
+                ApiService.getUserCookies();
             }catch(Exception ex){
-
+                Log.e("API", ex.getMessage());
             }
             return null;
         }
@@ -113,11 +114,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent goToMain = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(goToMain);
         }
-    }
-
-    private void login(){
-        PclLicenseServiceContractClient client = new PclLicenseServiceContractClient();
-        UserAccountModel user =  client.Find("adhdteam420@yopmail.com", "qwerty.123", "192.168.0.10");
     }
 
 }

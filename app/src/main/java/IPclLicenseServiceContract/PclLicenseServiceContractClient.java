@@ -31,7 +31,7 @@ import IPclLicenseServiceContract.IWsdl2CodeEvents;
 public class PclLicenseServiceContractClient {
     
     public static String NAMESPACE ="http://eleet.eu/services/";
-    public static String url="http://prod-license-service.cloudapp.net/pclLicense.svc";
+    public static String url="";
     public int timeOut = 360;
     public IPclLicenseServiceContract.IWsdl2CodeEvents eventHandler;
     public static final String SOAP_ACTION_PREFIX = "/";
@@ -1163,15 +1163,14 @@ public class PclLicenseServiceContractClient {
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
 
-        SoapObject soapReq = new SoapObject(NAMESPACE,"Find");
+        SoapObject soapReq = new SoapObject("http://Wsdl2CodeTestService/","Find");
         soapReq.addProperty("email",email);
         soapReq.addProperty("password",password);
         soapReq.addProperty("ip",ip);
 
         soapEnvelope.setOutputSoapObject(soapReq);
-        soapEnvelope.bodyOut = soapReq;
 
-        HttpTransportSE httpTransport = new HttpTransportSE(url);
+        HttpTransportSE httpTransport = new HttpTransportSE(url, timeOut);
         httpTransport.debug = true;
         try{
             if (headers!=null){
