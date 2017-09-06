@@ -22,18 +22,12 @@
         app:srcCompat="@drawable/pclnewa" />
 
     <TextView
+        android:id="@+id/textViewEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Jakub Krawczyk"
+        android:text="foo@email.com"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="18dp" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="jakubkrawczyk@pclogger.net"
-        android:textSize="16dp" />
 
 </LinearLayout>

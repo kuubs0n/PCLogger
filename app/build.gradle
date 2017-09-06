@@ -26,12 +26,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/ksoap2-android-assembly-3.6.2-jar-with-dependencies.jar')
+    compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.android.support:design:25.3.1'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import IPclLicenseServiceContract.PclLicenseServiceContractClient;
-import IPclLicenseServiceContract.UserAccountModel;
+import net.pclogger.pclogger.ApiModels.ApiConnection;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logic);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         setControls();
     }
@@ -65,8 +65,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validateCredentials(){
         boolean isCorrect = true;
-        String email = _editTextLogin.getText().toString();
-        String password = _editTextPassword.getText().toString();
+        /*String email = _editTextLogin.getText().toString();
+        String password = _editTextPassword.getText().toString();*/
+
+        String email = "reiter@pclogger.net";
+        String password = "Marzenka123";
 
         isCorrect = isEmailCorrect(email) && isPasswordCorrect(password);
         return isCorrect;
@@ -74,10 +77,16 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonLogin)
     public void submitButtonLogin(){
-        //if(validateCredentials()){
-            loginAsync loginAction = new loginAsync();
+        /*String email = _editTextLogin.getText().toString();
+        String password = _editTextPassword.getText().toString();*/
+
+        String email = "reiter@pclogger.net";
+        String password = "Marzenka123";
+
+        if(validateCredentials()){
+            loginAsync loginAction = new loginAsync(email, password);
             loginAction.execute();
-        //}
+        }
     }
 
     @OnClick(R.id.textViewLinkToTerm)
@@ -88,6 +97,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public class loginAsync extends AsyncTask<Void, Void, Void> {
+
+        private String email;
+        private String password;
+
+        public loginAsync(String email, String password){
+            this.email = email;
+            this.password = password;
+        }
 
         @Override
         protected void onPreExecute(){
@@ -101,7 +118,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... args0){
             try{
-                ApiService.getUserCookies();
+                if(ApiConnection.initApi(email, password)){
+                    goToDashboard(email);
+                }
             }catch(Exception ex){
                 Log.e("API", ex.getMessage());
             }
@@ -111,9 +130,14 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result){
             _progressDialog.dismiss();
-            Intent goToMain = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(goToMain);
         }
+    }
+
+    private void goToDashboard(String email){
+        Intent goToDashboard = new Intent(LoginActivity.this, MainActivity.class);
+        goToDashboard.putExtra("email", email);
+        startActivity(goToDashboard);
+        this.finish();
     }
 
 }
