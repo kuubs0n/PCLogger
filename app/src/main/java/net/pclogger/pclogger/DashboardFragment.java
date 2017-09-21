@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import net.pclogger.pclogger.ApiModels.ApiConnection;
+import net.pclogger.pclogger.ApiModels.UserDailyStatsModel;
 import net.pclogger.pclogger.ApiModels.UserDataModel;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class DashboardFragment extends Fragment {
     private ProgressDialog _progressDialog;
     private List<UserDataModel> _activeUsers;
     private List<UserDataModel> _users;
+    private List<UserDailyStatsModel> _dailyStats;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -58,7 +60,8 @@ public class DashboardFragment extends Fragment {
         protected Void doInBackground(Void... args0){
             try{
                 _users = ApiService.getUsers();
-                //_activeUsers = ApiService.getActiveUsers();
+                _activeUsers = ApiService.getActiveUsers();
+                //_dailyStats = ApiService.getDailyUsersStats();
             }catch(Exception ex){
                 Log.e("API", ex.getMessage());
             }
@@ -75,8 +78,9 @@ public class DashboardFragment extends Fragment {
     private void prepareActiveChart(View view) {
 
         List<PieEntry> entriesActive = new ArrayList<PieEntry>();
-        entriesActive.add(new PieEntry(_users.size(), "Aktywni"));
-        entriesActive.add(new PieEntry(_users.size() - 2f, "Nieaktywni"));
+        int unactive = _users.size() - _activeUsers.size();
+        entriesActive.add(new PieEntry(_activeUsers.size(), "Aktywni"));
+        entriesActive.add(new PieEntry(unactive, "Nieaktywni"));
 
         PieDataSet pieDataSetActive = new PieDataSet(entriesActive, "Aktywni użytkownicy");
         pieDataSetActive.setDrawValues(false);

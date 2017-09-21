@@ -60,14 +60,13 @@ public class ApiConnection {
                 httpPost.setHeader(header);
             }
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("UserName", email));
             nameValuePairs.add(new BasicNameValuePair("Password", password));
             nameValuePairs.add(new BasicNameValuePair("__RequestVerificationToken", token));
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
             HttpResponse postResponse = client.execute(httpPost);
 
-            httpGet = new HttpGet("https://admin.pclogger.net/Api/Users/GetUsers");
             return client;
         } catch (IOException e) {
             e.printStackTrace();

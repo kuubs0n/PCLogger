@@ -22,8 +22,7 @@
             android:id="@+id/pieChart"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:rotation="270"
-            android:visibility="invisible" />
+            android:rotation="270" />
 
     </LinearLayout>
 </LinearLayout>
