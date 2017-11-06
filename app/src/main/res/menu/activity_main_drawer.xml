@@ -4,20 +4,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_today"
-            android:icon="@drawable/dashboard"
             android:title="Dziś" />
         <item
             android:id="@+id/nav_efficiency"
-            android:icon="@drawable/bar"
             android:title="Wydajność" />
         <item
             android:id="@+id/nav_applications"
-            android:icon="@drawable/windows"
             android:title="Aplikacje" />
         <item
             android:id="@+id/nav_websites"
 
-            android:icon="@drawable/globe"
             android:title="Strony www" />
     </group>
 
@@ -29,7 +25,6 @@
                 android:title="Ustawienia" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/privateico"
                 android:title="Wyloguj" />
         </menu>
     </item>

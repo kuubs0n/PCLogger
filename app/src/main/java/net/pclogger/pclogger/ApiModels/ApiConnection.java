@@ -12,9 +12,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +49,6 @@ public class ApiConnection {
         try {
             HttpResponse getResponse = client.execute(httpGet);
             String responseString = EntityUtils.toString(getResponse.getEntity(), "UTF-8");
-            String token = getRequestVerificationToken(responseString);
             Header[] cookies = getResponse.getHeaders("Set-Cookie");
 
             HttpPost httpPost = new HttpPost(PCLOGGER_LOGIN_URL);
@@ -63,7 +59,6 @@ public class ApiConnection {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("UserName", email));
             nameValuePairs.add(new BasicNameValuePair("Password", password));
-            nameValuePairs.add(new BasicNameValuePair("__RequestVerificationToken", token));
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
             HttpResponse postResponse = client.execute(httpPost);
 
@@ -72,12 +67,5 @@ public class ApiConnection {
             e.printStackTrace();
             return null;
         }
-    }
-
-    private static String getRequestVerificationToken(String body) {
-        Document loginBody = Jsoup.parse(body);
-        Element inputToken = loginBody.select("input[name=__RequestVerificationToken]").first();
-        String tokenValue = inputToken.attr("value");
-        return tokenValue;
     }
 }

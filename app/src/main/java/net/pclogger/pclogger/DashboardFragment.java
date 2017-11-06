@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -28,9 +31,10 @@ import java.util.List;
 
 public class DashboardFragment extends Fragment {
 
+    private ListView lvUsers;
     private ProgressDialog _progressDialog;
     private List<UserDataModel> _activeUsers;
-    private List<UserDataModel> _users;
+    private UserDataModel[] _users;
     private List<UserDailyStatsModel> _dailyStats;
 
     @Override
@@ -60,7 +64,7 @@ public class DashboardFragment extends Fragment {
         protected Void doInBackground(Void... args0){
             try{
                 _users = ApiService.getUsers();
-                _activeUsers = ApiService.getActiveUsers();
+                ApiService.getDailyUsersEfficiency();
                 //_dailyStats = ApiService.getDailyUsersStats();
             }catch(Exception ex){
                 Log.e("API", ex.getMessage());
@@ -71,13 +75,27 @@ public class DashboardFragment extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             _progressDialog.dismiss();
+            prepareListView(getView());
             prepareActiveChart(getView());
         }
     }
 
+    private void prepareListView(View view){
+        lvUsers = (ListView) view.findViewById(R.id.lvUsers);
+        UserArrayAdapter adapter = new UserArrayAdapter(getActivity(), _users);
+        lvUsers.setAdapter(adapter);
+
+        lvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "DUPA", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void prepareActiveChart(View view) {
 
-        List<PieEntry> entriesActive = new ArrayList<PieEntry>();
+        /*List<PieEntry> entriesActive = new ArrayList<PieEntry>();
         int unactive = _users.size() - _activeUsers.size();
         entriesActive.add(new PieEntry(_activeUsers.size(), "Aktywni"));
         entriesActive.add(new PieEntry(unactive, "Nieaktywni"));
@@ -97,7 +115,7 @@ public class DashboardFragment extends Fragment {
         pieChart.setTouchEnabled(false);
         pieChart.setRotationEnabled(false);
         pieChart.setData(pieData);
-        pieChart.invalidate();
+        pieChart.invalidate();*/
     }
 
 }

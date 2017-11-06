@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Entity;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -32,23 +33,25 @@ public class ApiService {
 
     private static final String PCLOGGER_GET_USERS = "https://admin.pclogger.net/Api/Users/GetUsers";
     private static final String PCLOGGER_GET_ACTIVE_USERS = "https://admin.pclogger.net/Api/Users/GetActiveUsers";
+    private static final String PCLOGGER_GET_DAILY_USERS_EFFICIENCY = "https://admin.pclogger.net/Api/Users/GetDailyUsersEfficiency";
     private static final String PCLOGGER_GET_EFFICIENCY_FOR_ORGANIZATION = "https://admin.pclogger.net/api/EfficiencyStatistics/GetForOrganization/?date=2017-09-21T00:00:00.000Z";
     private static final String PCLOGGER_GET_DAILY_USERS_STATS = "https://admin.pclogger.net/api/users/GetDailyUsersStats?date=2017-09-21T00:00:00.000Z";
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static List<UserDataModel> getUsers(){
-        HttpClient client = ApiConnection.getApiClient();
-        try {
-            HttpResponse response = client.execute(new HttpGet(PCLOGGER_GET_USERS));
-            String results = EntityUtils.toString(response.getEntity(), "UTF-8");
+    public static UserDataModel[] getUsers(){
+            HttpClient client = ApiConnection.getApiClient();
+            try {
+                HttpResponse response = client.execute(new HttpGet(PCLOGGER_GET_USERS));
+                String results = EntityUtils.toString(response.getEntity(), "UTF-8");
 
-            Type type = new TypeToken<List<UserDataModel>>(){}.getType();
-            List<UserDataModel> getUserResults = new Gson().fromJson(results, type);
-            return getUserResults;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+                Type type = new TypeToken<UserDataModel[]>(){}.getType();
+                //List<UserDataModel> getUserResults = new Gson().fromJson(results, type);
+                UserDataModel[] getUsersResults = new Gson().fromJson(results, type);
+                return getUsersResults;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
     }
 
     public static List<UserDataModel> getActiveUsers(){
@@ -68,6 +71,22 @@ public class ApiService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void getDailyUsersEfficiency(){
+        HttpClient client = ApiConnection.getApiClient();
+        try{
+            Date todaysDate = new Date();
+            String stringDate = DATE_FORMAT.format(todaysDate) + "T00:00:00.00Z";
+            HttpResponse response = client.execute(new HttpGet(PCLOGGER_GET_DAILY_USERS_EFFICIENCY + "/date=" + stringDate));
+            String result = EntityUtils.toString(response.getEntity(), "UTF-8");
+            String a = "5";
+        }
+        catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getEfficiencyForOrganization(){
